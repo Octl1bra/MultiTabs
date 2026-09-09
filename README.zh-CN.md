@@ -67,3 +67,7 @@ pnpm typecheck && pnpm lint
 ```
 
 e2e 的启动方式（品牌版 Chrome 不认 `--load-extension`，走 `installExtension()`）和踩过的坑都在 `docs/decisions.md`。
+
+## 许可
+
+[MIT](LICENSE)

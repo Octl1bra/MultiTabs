@@ -73,3 +73,7 @@ How the e2e harness launches Chrome (branded Chrome ignores `--load-extension`; 
 ## Release
 
 Push a `v*` tag. The release workflow runs lint, typecheck and unit tests, checks that the tag matches `package.json`, zips the build and publishes a GitHub Release with the zip attached.
+
+## License
+
+[MIT](LICENSE)

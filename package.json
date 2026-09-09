@@ -2,6 +2,7 @@
   "name": "multitabs",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "description": "Chrome extension: multiple isolated login sessions for the same site in one window",
   "type": "module",
   "packageManager": "pnpm@11.20.0",
