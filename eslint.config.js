@@ -6,7 +6,8 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["test/e2e/**/*.mjs"],
+    // puppeteer 脚本里的 evaluate 回调跑在页面上下文，用到 document/window 等浏览器全局
+    files: ["test/e2e/**/*.mjs", "scripts/**/*.mjs"],
     rules: { "no-undef": "off" },
   },
   {
