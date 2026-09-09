@@ -38,7 +38,7 @@ const compose = async (scheme, file, scale) => {
   await p.evaluate(() => {
     const f = document.querySelector("iframe");
     const d = f.contentDocument;
-    d.activeElement && d.activeElement.blur();
+    if (d.activeElement) d.activeElement.blur();
     const shell = d.querySelector("#root > div");
     if (shell) shell.scrollTop = 235;
   });
