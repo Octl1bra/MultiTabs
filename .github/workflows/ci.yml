@@ -10,9 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11
+      - uses: pnpm/action-setup@v4 # 版本读 package.json 的 packageManager
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -32,9 +30,7 @@ jobs:
     needs: check
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11
+      - uses: pnpm/action-setup@v4 # 版本读 package.json 的 packageManager
       - uses: actions/setup-node@v4
         with:
           node-version: 24
