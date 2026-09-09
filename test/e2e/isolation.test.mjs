@@ -236,15 +236,16 @@ test("3. host 作用域：api 子域走主会话", async () => {
 
 test("10. 从会话 tab 打开的新 tab 继承会话：window.open / Cmd+click / target=_blank", async () => {
   const page = h.A.page;
+  const MOD = process.platform === "darwin" ? "Meta" : "Control"; // Linux/Windows 上是 Ctrl+click
   const cases = [
     { name: "window.open", act: () => page.click("#win") },
     { name: "target=_blank", act: () => page.click("#blank") },
     {
       name: "Cmd+click",
       act: async () => {
-        await page.keyboard.down("Meta");
+        await page.keyboard.down(MOD);
         await page.click("#plain");
-        await page.keyboard.up("Meta");
+        await page.keyboard.up(MOD);
       },
     },
   ];
