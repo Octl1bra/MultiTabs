@@ -6,6 +6,15 @@
 - WXT + TypeScript；popup / options 用 React 19 + HeroUI v3 + Tailwind v4；后台和内容脚本零依赖
 - 设计文档：[docs/multi-tabs-prd.md](docs/multi-tabs-prd.md)；技术验证记录：[docs/decisions.md](docs/decisions.md)；评审：[docs/prd-review.md](docs/prd-review.md)
 
+## 安装
+
+没上商店。到 [Releases](https://github.com/Octl1bra/MultiTabs/releases) 下载最新的 `multitabs-<版本>-chrome.zip`，解压，然后：
+
+1. 打开 `chrome://extensions/`，右上角开启「开发者模式」。
+2. 点「加载已解压的扩展程序」，选择解压出来的目录。
+
+最低 Chrome 132。更新时下载新版本解压覆盖，再在扩展卡片上点刷新。
+
 ## 怎么用
 
 1. 打开站点，点工具栏图标，输入会话名，点"新 tab"。新 tab 以未登录状态打开，在里面正常登录，登录态就进了这个会话。

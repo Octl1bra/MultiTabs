@@ -1,6 +1,6 @@
 {
   "name": "multitabs",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Chrome extension: multiple isolated login sessions for the same site in one window",
   "type": "module",

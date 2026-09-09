@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      # 标签必须和 package.json 的版本一致，避免发出去的包和 manifest 对不上
+      - name: Check tag matches package.json version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$pkg" ]; then
+            echo "tag v$tag != package.json $pkg" >&2
+            exit 1
+          fi
+      - run: pnpm zip
+      - name: List artifacts
+        run: ls -la .output/*.zip
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" .output/multitabs-*-chrome.zip \
+            --title "MultiTabs $GITHUB_REF_NAME" \
+            --generate-notes \
+            --notes "下载 chrome.zip，解压后在 chrome://extensions 开启开发者模式，\"加载已解压的扩展程序\"选择解压出的目录。最低 Chrome 132。"
