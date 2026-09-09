@@ -1,14 +1,108 @@
-# Chrome 网上应用店 商品信息（逐条粘贴）
+# Chrome Web Store listing (paste field by field)
 
-对应开发者后台报的每一条缺失项。
+Primary language: **English**. Add **Chinese (Simplified)** as a second store language with the text in the second half.
 
-## 商品详情
+---
 
-**语言**：中文（简体）
+## English
 
-**类别**：效率 → 工作流程和规划。（如果审核建议换，备选"开发者工具"。）
+### Store listing
 
-**简短说明（132 字以内）**
+**Category**: Productivity → Workflow & Planning (alternative: Developer Tools)
+
+**Summary (≤132 chars)**
+
+Separate logins in different tabs of the same website. Multiple accounts online at once, no signing out.
+
+**Description**
+
+MultiTabs keeps separate login sessions in different tabs of the same website, all online at the same time, in one window. It is Firefox's Multi-Account Containers, for Chrome.
+
+How to use:
+1. Open a site, click the toolbar icon, type a session name, press "New tab". The new tab opens signed out; sign in there and that login belongs to the session.
+2. Click the icon again: saved sessions can be opened in a new tab, or switched to in the current tab with "Here".
+3. "Leave" returns the current tab to the browser's default session. The session and its cookies are kept for next time.
+4. Tabs, popups and links opened from a session tab inherit the session automatically.
+5. Keyboard shortcut ⌘⇧Y / Ctrl+Shift+Y: create a session for the current site and open it in a new tab.
+
+Who it is for:
+- Developers and testers signing in as admin, regular user and candidate at the same time.
+- Operators managing several shops or accounts on one platform.
+- Anyone keeping a work account and a personal account side by side on the same site.
+
+What is isolated: cookies (including HttpOnly), document.cookie, localStorage, sessionStorage, IndexedDB, CacheStorage, BroadcastChannel and same-origin Web Workers. Third-party sign-in (Google, GitHub, …) goes through the browser's default session; telling accounts apart relies on the provider's account chooser.
+
+Privacy: nothing is collected or uploaded. No server, no network requests, no analytics. Everything stays on your device. Open source: https://github.com/Octl1bra/MultiTabs
+
+Known limitations: service workers are not registered inside session tabs; the cookie Path attribute is ignored; after a browser restart, sessions and cookies are kept but tabs need to be attached again.
+
+**Icon**: `docs/store/icon-128.png` (128×128, 96px artwork centered with a 16px transparent margin).
+
+**Screenshots**: `docs/store/screenshot-1280x800.png` (preferred) or `docs/store/screenshot-640x400.png`.
+
+### Privacy practices
+
+**Single purpose**
+
+Keep separate login sessions in different tabs of the same website (several accounts online at once). Every feature serves that one purpose: isolating cookies and page storage for sessions the user creates.
+
+**Permission justifications**
+
+cookies:
+Two uses. (1) chrome.cookies.getPartitionKey returns the site (eTLD+1) computed by Chrome, which decides which subdomains a session covers. (2) When a site responds with a Clear-Site-Data header, the browser clears the default session's cookies; the extension uses cookies.onChanged and cookies.set to restore the cookies that were removed, so a "sign out" inside a session tab does not affect other tabs. No cookie is read for any other purpose and none is transmitted.
+
+declarativeNetRequest:
+This is the core isolation mechanism. For tabs the user has explicitly attached to a session (session rules filtered by tabId), the extension rewrites the request Cookie header to the session's own cookies, removes Set-Cookie from responses so they don't land in the browser's default session, and adds Cache-Control: no-cache to navigation requests so the shared HTTP cache can't leak one session's page into another. Rules apply only to attached tabs and the session's site; other tabs are untouched. declarativeNetRequestFeedback is not used.
+
+scripting:
+Injects the page patch (isolating document.cookie, localStorage, IndexedDB, …) into in-scope pages of session tabs as a fallback to the statically registered content script. Only runs on tabs the user attached to a session; all injected code ships inside the extension.
+
+storage:
+storage.local holds the sessions the user created and their cookies; storage.session holds the tab-to-session mapping (cleared when the browser closes). All data is local.
+
+tabs:
+Read the current tab's URL to determine the site and list its sessions; create and reload tabs to apply or leave a session; use openerTabId so tabs opened from a session tab inherit it; show the session colour and name on the toolbar badge.
+
+webNavigation:
+Listen for committed navigations to tell whether a session tab's current page is inside the session's site (badge colour), trigger the fallback page patch on in-scope pages, and record when each top-level navigation started to resolve the race between a new tab's first request and its rules being installed.
+
+webRequest:
+Observe only, never block (Manifest V3 does not allow blocking anyway). Reads Set-Cookie from responses in session tabs and stores those cookies in the session's local jar; reads Clear-Site-Data to clear the corresponding session's cookies. Requests and responses are not modified here; modifications are done by declarativeNetRequest.
+
+Host permissions (<all_urls>):
+Users can create a session for any website, which the extension cannot know in advance, and isolation must cover every subdomain of that site and every request the site makes from a session tab. Host access to all URLs is therefore required to install declarativeNetRequest modifyHeaders rules and to observe webRequest response headers. All processing happens only on tabs the user has explicitly attached to a session; other tabs and sites are neither read nor modified.
+
+Remote code:
+Select "No, I am not using remote code". All scripts are bundled in the extension; no external scripts are loaded, no eval or new Function, and extension pages follow the default MV3 CSP.
+
+**Data usage**
+
+Check:
+- Authentication information (cookies set by websites inside session tabs; stored locally only, to implement isolation)
+- Website content (localStorage / IndexedDB the site writes inside session tabs; stored locally under session-prefixed keys)
+
+Check all three certifications:
+- I do not sell or transfer user data to third parties, outside of the approved use cases
+- I do not use or transfer user data for purposes that are unrelated to my item's single purpose
+- I do not use or transfer user data to determine creditworthiness or for lending purposes
+
+**Privacy policy URL**
+
+https://github.com/Octl1bra/MultiTabs/blob/main/PRIVACY.md
+
+### Review notes
+
+This permission set (<all_urls> + webRequest + cookies + declarativeNetRequest) triggers manual review, typically a few days to two weeks. If reviewers ask for more, send them the "How it works" section of the README and the justifications above; the code is open source, so the repository link is the best answer.
+
+---
+
+## 中文（简体）
+
+### 商品详情
+
+**类别**：效率 → 工作流程和规划（备选：开发者工具）
+
+**简短说明**
 
 同一个网站，多个账号同时在线。每个标签页一套独立的登录态，切换不用登出。
 
@@ -34,11 +128,7 @@ MultiTabs 让同一个网站的多个标签页各自保持独立的登录态，�
 
 已知限制：会话标签页内不注册 Service Worker；cookie 的 Path 属性被忽略；浏览器重启后会话和 cookie 保留，但标签页需要重新挂载。
 
-**图标**：上传 `docs/store/icon-128.png`（128×128，图形 96px 居中，四周 16px 透明留白，按商店规范）。
-
-**屏幕截图**：`docs/store/screenshot-1280x800.png`（首选）或 `docs/store/screenshot-640x400.png`。
-
-## 隐私权规范
+### 隐私权规范
 
 **单一用途说明**
 
@@ -62,7 +152,7 @@ tabs：
 读取当前标签页的 URL 以判断所属网站并显示会话列表；创建新标签页、刷新标签页以应用或退出会话；用 openerTabId 让从会话标签页打开的新标签页继承会话；在工具栏角标显示当前标签页的会话颜色和名称。
 
 webNavigation：
-监听导航提交事件，判断会话标签页当前页面是否在会话范围内（更新角标灰/彩），并在范围内页面触发页面补丁的兜底注入；记录每次顶层导航的开始时间，用于处理新标签页第一个请求与规则安装之间的竞态。
+监听导航提交事件，判断会话标签页当前页面是否在会话范围内（更新角标），在范围内页面触发页面补丁的兜底注入；记录每次顶层导航的开始时间，用于处理新标签页第一个请求与规则安装之间的竞态。
 
 webRequest：
 只观察、不阻塞（Manifest V3 下 webRequest 本来也无法阻塞）。读取会话标签页响应头里的 Set-Cookie，把网站设置的 cookie 写进该会话的本地 cookie 罐；读取 Clear-Site-Data 头以清空对应会话的 cookie。不修改任何请求或响应，修改由 declarativeNetRequest 完成。
@@ -73,21 +163,4 @@ webRequest：
 远程代码：
 选择"否，我不使用远程代码"。所有脚本打包在扩展内，不加载外部脚本，不使用 eval 或 new Function，扩展页面遵守 MV3 默认 CSP。
 
-**数据使用**
-
-勾选：
-- 身份验证信息（网站在会话标签页里设置的 cookie，仅本地保存，用于实现隔离）
-- 网站内容（网站在会话标签页里写入的 localStorage / IndexedDB 等，仅本地、以会话前缀保存）
-
-三项认证全部勾选：
-- 不向第三方出售或转移用户数据（除经批准的用例外）
-- 不将用户数据用于与商品单一用途无关的目的
-- 不将用户数据用于确定信用度或用于放贷目的
-
-**隐私权政策网址**
-
-https://github.com/Octl1bra/MultiTabs/blob/main/PRIVACY.md
-
-## 审核提示
-
-这套权限（<all_urls> + webRequest + cookies + declarativeNetRequest）会触发人工审核，通常几天到两周。如果审核来信要求补充，把 README 的"工作原理"和上面的权限理由贴过去即可；代码开源，可以直接给仓库链接。
+**数据使用**：勾选"身份验证信息"和"网站内容"，三项认证全勾。隐私权政策网址同上。

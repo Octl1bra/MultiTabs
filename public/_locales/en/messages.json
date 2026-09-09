@@ -1,0 +1,11 @@
+{
+  "extName": {
+    "message": "MultiTabs"
+  },
+  "extDescription": {
+    "message": "Separate logins in different tabs of the same website. Multiple accounts online at once, in one window."
+  },
+  "cmdNewSession": {
+    "message": "Create a session for the current site and open it in a new tab"
+  }
+}

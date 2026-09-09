@@ -1,0 +1,11 @@
+{
+  "extName": {
+    "message": "MultiTabs"
+  },
+  "extDescription": {
+    "message": "同一个窗口里，同一个网站的多个标签页各自保持独立登录态，多账号同时在线。"
+  },
+  "cmdNewSession": {
+    "message": "为当前站点新建会话并在新标签页打开"
+  }
+}

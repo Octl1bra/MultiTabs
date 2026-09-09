@@ -1,67 +1,75 @@
 # MultiTabs
 
-同一个 Chrome 窗口里，同一个网站的多个标签页各自保持独立的登录态，同时在线、互不干扰。行为基准是 Firefox 的 Multi-Account Containers。
+English · [中文](README.zh-CN.md)
 
-- Chrome MV3，最低 Chrome 132
-- WXT + TypeScript；popup / options 用 React 19 + HeroUI v3 + Tailwind v4；后台和内容脚本零依赖
-- 设计文档：[docs/multi-tabs-prd.md](docs/multi-tabs-prd.md)；技术验证记录：[docs/decisions.md](docs/decisions.md)；评审：[docs/prd-review.md](docs/prd-review.md)
+Keep separate logins in different tabs of the same website, all online at once, in one Chrome window. Think Firefox's Multi-Account Containers, for Chrome.
 
-## 安装
+- Chrome Manifest V3, Chrome 132 or newer
+- WXT + TypeScript; popup and options built with React 19, HeroUI v3 and Tailwind v4; the background service worker and content scripts have zero dependencies
+- Design doc: [docs/multi-tabs-prd.md](docs/multi-tabs-prd.md) (Chinese); verified technical decisions: [docs/decisions.md](docs/decisions.md) (Chinese); review notes: [docs/prd-review.md](docs/prd-review.md) (Chinese)
 
-没上商店。到 [Releases](https://github.com/Octl1bra/MultiTabs/releases) 下载最新的 `multitabs-<版本>-chrome.zip`，解压，然后：
+## Install
 
-1. 打开 `chrome://extensions/`，右上角开启「开发者模式」。
-2. 点「加载已解压的扩展程序」，选择解压出来的目录。
+Not on the Chrome Web Store yet. Grab the latest `multitabs-<version>-chrome.zip` from [Releases](https://github.com/Octl1bra/MultiTabs/releases), unzip it, then:
 
-最低 Chrome 132。更新时下载新版本解压覆盖，再在扩展卡片上点刷新。
+1. Open `chrome://extensions/` and turn on **Developer mode** (top right).
+2. Click **Load unpacked** and pick the unzipped folder.
 
-## 怎么用
+Requires Chrome 132+. To update, unzip the new version over the old folder and hit the refresh button on the extension card.
 
-1. 打开站点，点工具栏图标，输入会话名，点"新 tab"。新 tab 以未登录状态打开，在里面正常登录，登录态就进了这个会话。
-2. 再点图标，列表里的会话可以"打开"（新 tab）或"此处"（当前 tab 切过去）。
-3. "退出"让当前 tab 回到主会话。会话本身和它的 cookie 保留，下次还能用。
-4. 快捷键 `⌘⇧Y` / `Ctrl+Shift+Y`：为当前站点新建一个会话并在新 tab 打开。
-5. 从会话 tab 里打开的新 tab（含 `window.open`、`target=_blank`、Cmd+click）自动继承会话。
+## How to use
 
-## 工作原理（一句话版）
+1. Open a site, click the toolbar icon, type a session name, press **New tab**. The new tab opens signed out. Sign in there and that login belongs to the session.
+2. Click the icon again: saved sessions can be **Open**ed in a new tab or switched to with **Here** in the current tab.
+3. **Leave** returns the current tab to the browser's default session. The session and its cookies are kept for next time.
+4. `⌘⇧Y` / `Ctrl+Shift+Y` creates a session for the current site and opens it in a new tab.
+5. Tabs opened from a session tab (`window.open`, `target=_blank`, Cmd/Ctrl+click) inherit the session automatically.
 
-每个挂载的 tab 有一组按 `tabIds` 过滤的 DNR session rules：剥掉主会话的 `Cookie` 头、注入会话罐里的 cookie、删掉响应的 `Set-Cookie`；`webRequest` 观察 `Set-Cookie` 写进会话罐。页面侧一个 MAIN world 的 document_start 脚本给 `document.cookie`、`localStorage` / `sessionStorage`、IndexedDB、CacheStorage、BroadcastChannel、Worker 打补丁做命名空间隔离；补丁靠 DNR 注入的 `Server-Timing` 响应头在页面第一段脚本之前同步得知自己属于哪个会话。详见 PRD 第 6 节。
+The UI follows the browser's language: Chinese when Chrome runs in Chinese, English otherwise.
 
-## 已知限制
+## How it works, in one paragraph
 
-写在 PRD 第 7 节。挑几条最常碰到的：
+Every attached tab gets a set of `declarativeNetRequest` session rules filtered by `tabIds`: strip the browser's `Cookie` header, inject the session's own cookies, drop `Set-Cookie` from responses; `webRequest` observes `Set-Cookie` and writes it into the session's jar. On the page side, a MAIN-world `document_start` script patches `document.cookie`, `localStorage` / `sessionStorage`, IndexedDB, CacheStorage, BroadcastChannel and Workers into a per-session namespace. The patch learns which session a document belongs to, before the page's first inline script runs, from a `Server-Timing` response header that the DNR rules inject. Section 6 of the design doc has the details.
 
-- 第三方登录（Google / GitHub 等）走主会话，区分账号靠 IdP 的账号选择器；IdP 直接 "Continue as A" 的话两个会话会登成同一个人。
-- Service Worker 在会话 tab 里被阻断（`register` 被拒、已有的被注销），依赖 SW 的站点退化为无 SW 模式。
-- cookie 的 `Path` 属性被忽略。
-- `document.cookie = …` 之后立刻发出的请求可能还没带上新 cookie（规则更新要绕一圈 service worker）。
-- 会话 cookie（无过期时间）也会跨浏览器重启保留，30 天不更新才清。
-- 浏览器重启后会话和 cookie 都在，但 tab 的挂载丢失，需要重新"此处"。
-- `Clear-Site-Data: "storage"` 会清掉该站所有会话的 localStorage / IndexedDB，拦不住。
+## Known limitations
 
-## 权限
+The full list is in section 7 of the design doc. The ones you are most likely to hit:
 
-| 权限 | 用途 |
+- Third-party sign-in (Google, GitHub, …) uses the browser's default session; telling accounts apart relies on the provider's account chooser. If the provider just says "Continue as A", both sessions end up as A.
+- Service workers are blocked in session tabs (`register` is rejected, existing registrations are removed). Sites that depend on a SW fall back to their no-SW mode.
+- The cookie `Path` attribute is ignored.
+- A request fired right after `document.cookie = …` may not carry the new cookie yet; rule updates take a round trip through the service worker.
+- Session cookies (no expiry) survive browser restarts; they are dropped after 30 days without updates.
+- After a browser restart, sessions and cookies are kept but tab attachments are lost; use **Here** again.
+- `Clear-Site-Data: "storage"` wipes the site's localStorage / IndexedDB for every session; that can't be intercepted.
+
+## Permissions
+
+| Permission | Why |
 |---|---|
-| `declarativeNetRequest` | 按 tab 改写 `Cookie` / `Set-Cookie` / `Cache-Control` / `Server-Timing` 头 |
-| `webRequest` | 观察响应里的 `Set-Cookie` 和 `Clear-Site-Data`（MV3 下只观察不阻塞） |
-| `cookies` | `getPartitionKey` 算站点 key；`Clear-Site-Data` 后把误删的主罐 cookie 写回 |
-| `scripting` | 信号缺失时的兜底注入 |
-| `storage` | 会话与会话罐（local）、tab 挂载（session） |
-| `tabs` / `webNavigation` | 挂载生命周期、新 tab 继承、角标 |
-| `host_permissions: <all_urls>` | 以上都需要 |
+| `declarativeNetRequest` | Rewrite `Cookie` / `Set-Cookie` / `Cache-Control` / `Server-Timing` headers per tab |
+| `webRequest` | Observe `Set-Cookie` and `Clear-Site-Data` on responses (observe only; MV3 cannot block) |
+| `cookies` | `getPartitionKey` to compute the site key; restore default-session cookies removed by `Clear-Site-Data` |
+| `scripting` | Fallback injection of the page patch when the signal header is missing |
+| `storage` | Sessions and cookie jars (`local`), tab attachments (`session`) |
+| `tabs` / `webNavigation` | Attachment lifecycle, new-tab inheritance, the toolbar badge |
+| `host_permissions: <all_urls>` | All of the above must work on whatever site you create a session for |
 
-会话罐明文存在 `chrome.storage.local`，可读性与浏览器自身的 cookie 库相当。不发起任何网络请求，不收集遥测。
+Cookie jars are stored in plain text in `chrome.storage.local`, about as readable as the browser's own cookie store. The extension makes no network requests and has no telemetry. See [PRIVACY.md](PRIVACY.md).
 
-## 开发
+## Development
 
 ```bash
 pnpm install
-pnpm dev          # WXT 开发模式，加载 .output/chrome-mv3-dev
-pnpm build        # 产物在 .output/chrome-mv3
-pnpm test         # vitest 单测
-pnpm test:e2e     # puppeteer e2e，需要本机 Chrome 和 openssl；会自己起测试站点
+pnpm dev          # WXT dev mode, loads .output/chrome-mv3-dev
+pnpm build        # output in .output/chrome-mv3
+pnpm test         # vitest unit tests
+pnpm test:e2e     # puppeteer e2e; needs a local Chrome and openssl, starts its own test site
 pnpm typecheck && pnpm lint
 ```
 
-e2e 的启动方式（品牌版 Chrome 不认 `--load-extension`，走 `installExtension()`）和踩过的坑都在 `docs/decisions.md`。
+How the e2e harness launches Chrome (branded Chrome ignores `--load-extension`; we use `installExtension()`) and every trap we fell into are recorded in `docs/decisions.md`.
+
+## Release
+
+Push a `v*` tag. The release workflow runs lint, typecheck and unit tests, checks that the tag matches `package.json`, zips the build and publishes a GitHub Release with the zip attached.

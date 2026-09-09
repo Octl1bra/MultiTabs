@@ -1,6 +1,26 @@
-# MultiTabs 隐私政策 / Privacy Policy
+# MultiTabs Privacy Policy / 隐私政策
 
-最后更新：2026-09-09
+Last updated: 2026-09-09
+
+## English
+
+MultiTabs is a Chrome extension that keeps separate login sessions in different tabs of the same website.
+
+**Collection and transmission.** MultiTabs does not collect, upload, or share any data. It makes no network requests of its own, has no server, and includes no analytics or telemetry.
+
+**Data processed locally.** To isolate sessions, the extension handles the following data on your device, and only after you explicitly create a session for a site and attach a tab to it:
+
+- Cookies (including HttpOnly cookies) set by that site inside session tabs, stored in `chrome.storage.local` and injected into later requests in place of the browser's default cookies.
+- localStorage / sessionStorage / IndexedDB / CacheStorage written by that site inside session tabs, kept in the site's own storage under session-prefixed keys.
+- The tab-to-session mapping, stored in `chrome.storage.session` and cleared when the browser closes.
+
+All of this stays on your device. You can delete any session from the extension's options page, or uninstall the extension to remove everything.
+
+**Tabs not attached to a session.** The content scripts load on every page but do nothing unless the tab belongs to a session; other pages are neither read nor modified.
+
+**Third parties.** None.
+
+**Contact.** https://github.com/Octl1bra/MultiTabs/issues
 
 ## 中文
 
@@ -21,23 +41,3 @@ MultiTabs 是一个 Chrome 扩展，用于让同一个网站的多个标签页�
 **第三方**：无。
 
 **联系**：https://github.com/Octl1bra/MultiTabs/issues
-
-## English
-
-MultiTabs is a Chrome extension that keeps separate login sessions in different tabs of the same website.
-
-**Collection and transmission**: MultiTabs does not collect, upload, or share any data. It makes no network requests of its own, has no server, and includes no analytics or telemetry.
-
-**Data processed locally**: to isolate sessions, the extension handles the following data on your device, and only after you explicitly create a session for a site and attach a tab to it:
-
-- Cookies (including HttpOnly cookies) set by that site inside session tabs, stored in `chrome.storage.local` and injected into later requests instead of the browser's default cookies.
-- localStorage / sessionStorage / IndexedDB / CacheStorage written by that site inside session tabs, kept in the site's own storage under session-prefixed keys.
-- The tab-to-session mapping, stored in `chrome.storage.session`, cleared when the browser closes.
-
-All of this stays on your device. You can delete any session from the extension's options page, or uninstall the extension to remove everything.
-
-**Tabs not attached to a session**: the content scripts load on every page but do nothing unless the tab belongs to a session; other pages are neither read nor modified.
-
-**Third parties**: none.
-
-**Contact**: https://github.com/Octl1bra/MultiTabs/issues

@@ -1,4 +1,5 @@
 import { parseSetCookie } from "@/src/lib/cookie";
+import { t } from "@/src/lib/i18n";
 import { hostInScope, isHttpUrl, isInScope, parseUrl } from "@/src/lib/scope";
 import {
   BRIDGE_MSG,
@@ -66,7 +67,7 @@ const handlers: Handlers = {
   async createSession({ tabId, name, scope, action }) {
     const tab = await chrome.tabs.get(tabId);
     const url = parseUrl(tab.url);
-    if (!url || !isHttpUrl(url)) throw new Error("当前页面不是 http/https");
+    if (!url || !isHttpUrl(url)) throw new Error(t("errNotHttp"));
     const keys = await siteKeysForTab(tabId, url);
     const s = await createSession({
       name,
@@ -83,14 +84,14 @@ const handlers: Handlers = {
 
   async openInNewTab({ sessionId, url }) {
     const s = await getSession(sessionId);
-    if (!s) throw new Error("会话不存在");
+    if (!s) throw new Error(t("errNoSession"));
     const [active] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     return { tabId: await openInNewTab(s, url, active) };
   },
 
   async useHere({ sessionId, tabId }) {
     const s = await getSession(sessionId);
-    if (!s) throw new Error("会话不存在");
+    if (!s) throw new Error(t("errNoSession"));
     await useHere(s, tabId);
     return {};
   },

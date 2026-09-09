@@ -1,3 +1,4 @@
+import { t } from "@/src/lib/i18n";
 import { newId } from "@/src/lib/ids";
 import { hostInScope } from "@/src/lib/scope";
 import { MAX_SESSION_NAME, PALETTE, type Scope, type Session } from "@/src/lib/types";
@@ -21,9 +22,9 @@ export function sessionsForHost(all: Record<string, Session>, host: string): Ses
 
 export function validateName(name: string): string {
   const n = name.trim();
-  if (!n) throw new Error("会话名不能为空");
+  if (!n) throw new Error(t("errNameEmpty"));
   if ([...n].length > MAX_SESSION_NAME)
-    throw new Error(`会话名不能超过 ${MAX_SESSION_NAME} 个字符`);
+    throw new Error(t("errNameTooLong", { n: MAX_SESSION_NAME }));
   return n;
 }
 
@@ -37,7 +38,7 @@ export async function createSession(input: {
     const name = validateName(input.name);
     const siblings = Object.values(all).filter((s) => s.siteKey === input.siteKey);
     if (siblings.some((s) => s.name === name))
-      throw new Error(`"${name}" 在 ${input.siteKey} 下已存在`);
+      throw new Error(t("errNameTaken", { name, site: input.siteKey }));
     const now = Date.now();
     const s: Session = {
       id: newId(),
@@ -54,7 +55,7 @@ export async function createSession(input: {
   });
 }
 
-/** 快捷键用：自动起名"会话 N" */
+/** For the keyboard shortcut: auto-name "Session N" */
 export async function nextAutoName(siteKey: string): Promise<string> {
   const all = await getSessions();
   const used = new Set(
@@ -63,7 +64,7 @@ export async function nextAutoName(siteKey: string): Promise<string> {
       .map((s) => s.name),
   );
   for (let i = 1; ; i++) {
-    const n = `会话 ${i}`;
+    const n = t("autoName", { n: i });
     if (!used.has(n)) return n;
   }
 }
@@ -75,13 +76,13 @@ export async function updateSession(
   return withLock(KEY, async () => {
     const all = await getSessions();
     const s = all[id];
-    if (!s) throw new Error("会话不存在");
+    if (!s) throw new Error(t("errNoSession"));
     if (patch.name !== undefined) {
       const name = validateName(patch.name);
       if (
         Object.values(all).some((o) => o.id !== id && o.siteKey === s.siteKey && o.name === name)
       ) {
-        throw new Error(`"${name}" 在 ${s.siteKey} 下已存在`);
+        throw new Error(t("errNameTaken", { name, site: s.siteKey }));
       }
       s.name = name;
     }

@@ -1,3 +1,4 @@
+import { t } from "@/src/lib/i18n";
 import { isInScope, parseUrl } from "@/src/lib/scope";
 import { getEffective } from "./assignments";
 import { getSession } from "./sessions";
@@ -21,7 +22,11 @@ export async function updateBadge(tabId: number, urlHint?: string): Promise<void
     }
     const inScope = !!url && isInScope(eff.a, url);
     const color = inScope && !eff.pending ? (s?.color ?? BADGE_GRAY) : BADGE_GRAY;
-    const suffix = eff.pending ? "（待挂载）" : inScope ? "" : "（当前页面不在范围内）";
+    const suffix = eff.pending
+      ? " " + t("badgePending")
+      : inScope
+        ? ""
+        : " " + t("badgeOutOfScope");
     await chrome.action.setBadgeBackgroundColor({ tabId, color });
     await chrome.action.setBadgeText({ tabId, text: " " });
     await chrome.action.setTitle({ tabId, title: `${name} · ${eff.a.siteKey}${suffix}` });
