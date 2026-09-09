@@ -22,4 +22,12 @@ for (const size of [16, 32, 48, 96, 128]) {
     clip: { x: 0, y: 0, width: size, height: size },
   });
 }
+// 商店图标：128 画布，图形 96 居中，四周 16px 透明留白（商店规范）
+await page.setViewport({ width: 128, height: 128, deviceScaleFactor: 1 });
+await page.setContent(html(96).replace("<svg ", '<svg style="position:absolute;left:16px;top:16px" '));
+await page.screenshot({
+  path: "docs/store/icon-128.png",
+  omitBackground: true,
+  clip: { x: 0, y: 0, width: 128, height: 128 },
+});
 await browser.close();
