@@ -123,6 +123,46 @@ test("前缀代理：IndexedDB / caches 名字对页面透明，主会话看不�
   assert.ok(!mainKeys.includes("token"));
 });
 
+test("storage 事件跨 tab 转发：去前缀、storageArea 是本页的 localStorage、别人的 key 看不到", async () => {
+  const listener = h.A.page;
+  await listener.goto(h.urls.app("/"));
+  await listener.evaluate(() => {
+    window.__events = [];
+    window.addEventListener("storage", (e) => {
+      window.__events.push({
+        key: e.key,
+        newValue: e.newValue,
+        areaIsLocal: e.storageArea === localStorage,
+        areaIsStorage: e.storageArea instanceof Storage,
+      });
+    });
+  });
+  // 同一会话的另一个 tab 写 localStorage
+  const { tabId: otherId } = await h.api.call("openInNewTab", {
+    sessionId: h.A.session.id,
+    url: h.urls.app("/"),
+  });
+  await h.evalTab(otherId, () => localStorage.setItem("shared", "from-other"));
+  // 主会话 tab 写同名 key（真实 key 无前缀），会话 tab 不该收到
+  await h.main.goto(h.urls.app("/"));
+  await h.main.evaluate(() => localStorage.setItem("shared", "from-main"));
+  const events = await waitFor(
+    async () => {
+      const ev = await listener.evaluate(() => window.__events);
+      return ev.length >= 1 ? ev : null;
+    },
+    { label: "storage event" },
+  );
+  await new Promise((r) => setTimeout(r, 300));
+  const all = await listener.evaluate(() => window.__events);
+  assert.deepEqual(all, [
+    { key: "shared", newValue: "from-other", areaIsLocal: true, areaIsStorage: true },
+  ]);
+  assert.equal(events.length, 1);
+  assert.equal(await listener.evaluate(() => localStorage.getItem("shared")), "from-other");
+  await h.api.closeTab(otherId);
+});
+
 test("Service Worker 在会话 tab 里被阻断", async () => {
   await h.A.page.goto(h.urls.app("/sw"));
   await h.A.page.waitForFunction(() => document.getElementById("sw")?.textContent);

@@ -137,21 +137,32 @@ function patchWebStorage(prefix: string): { clearAll(): void } {
     (e: StorageEvent) => {
       if (synthetic.has(e)) return;
       if (e.key === null) return; // 真实 storage 的 clear()，放行
-      e.stopImmediatePropagation();
-      if (!e.key.startsWith(prefix)) return;
+      if (!e.key.startsWith(prefix)) {
+        e.stopImmediatePropagation(); // 别的会话或主会话的 key，本页不该看到
+        return;
+      }
       const area =
         e.storageArea === realLocal
           ? localProxy
           : e.storageArea === realSession
             ? sessionProxy
             : null;
-      const ev = new StorageEvent("storage", {
-        key: e.key.slice(prefix.length),
-        oldValue: e.oldValue,
-        newValue: e.newValue,
-        url: e.url,
-        storageArea: area,
-      });
+      let ev: StorageEvent;
+      try {
+        // StorageEvent 构造器对 storageArea 做 WebIDL 类型检查，只认真正的 Storage，
+        // Proxy 会抛 "Failed to convert value to 'Storage'"。先用真实对象构造，再在实例上盖成代理。
+        ev = new StorageEvent("storage", {
+          key: e.key.slice(prefix.length),
+          oldValue: e.oldValue,
+          newValue: e.newValue,
+          url: e.url,
+          storageArea: e.storageArea,
+        });
+        if (area) Object.defineProperty(ev, "storageArea", { value: area, configurable: true });
+      } catch {
+        return; // 构造失败就让原事件（带前缀 key）继续传，好过页面什么都收不到
+      }
+      e.stopImmediatePropagation();
       synthetic.add(ev);
       window.dispatchEvent(ev);
     },
@@ -241,10 +252,10 @@ function installNamespacePatches(prefix: string): void {
         return match.call(this, req, { ...opts, cacheName: prefix + opts.cacheName });
       }
       // 没指定 cacheName：只在本会话的 cache 里找
-      const lookup = async (storage: unknown, ks: string[]) => {
+      const lookup = async (cs: unknown, ks: string[]) => {
         for (const k of ks) {
           if (!k.startsWith(prefix)) continue;
-          const r = await match.call(storage, req, { ...(opts || {}), cacheName: k });
+          const r = await match.call(cs, req, { ...(opts || {}), cacheName: k });
           if (r) return r;
         }
         return undefined;

@@ -280,3 +280,16 @@ const sw = await browser.waitForTarget(
 - 刚被扩展 `tabs.update` 重导航的 tab，紧接着的 `evaluate` 偶尔悬住。`evalTab` 给 evaluate 套 3 s 超时并重取页面重试；输掉 race 的那个 promise 之后会 reject，必须 `.catch`，不然 `node --test` 当 unhandled rejection 把整个用例判死。
 - `webRequest.onHeadersReceived` 的 `types` 过滤器用的是 webRequest 自己的枚举，没有 `webtransport`；照抄 DNR 的列表会让 `addListener` 抛异常，service worker 启动即崩，症状是所有 `sendMessage` 超时。不传 `types` 最省事。
 - `indexedDB.databases()` 在 `open()` 刚成功那一刻可能还列不出新库，测试要轮询。
+
+## 8. 真实站点回报的第一个 bug：StorageEvent 不接受 Proxy
+
+用户在 `mp.weixin.qq.com` 的会话 tab 里看到扩展错误页刷出三条
+`Failed to construct 'StorageEvent': Failed to read the 'storageArea' property from 'StorageEventInit': Failed to convert value to 'Storage'`。
+
+原因：补丁把跨 tab 的 `storage` 事件截下来、去掉 key 前缀再重新派发，重派时 `storageArea` 传的是 localStorage 的 Proxy。`StorageEvent` 构造器按 WebIDL 对 `storageArea` 做品牌检查，Proxy 过不去。而且抛错发生在 `stopImmediatePropagation()` 之后，页面自己的监听器也收不到事件。
+
+修法：用真实的 `Storage` 对象构造事件，再 `Object.defineProperty(ev, "storageArea", { value: proxy })` 在实例上盖掉，页面看到的 `e.storageArea === localStorage` 为真、`instanceof Storage` 也为真；构造失败就放行原事件。e2e 加了跨 tab 的 storage 事件用例。
+
+顺带发现 patch.js 里被打进了整个 `@wxt-dev/storage`（11 KB）：WXT 的 unimport 看到 `install.ts` 里一个叫 `storage` 的函数参数就自动 import 了 `wxt/utils/storage`。MAIN world 补丁里不要出现裸的 `storage` 标识符。
+
+一般教训：凡是把页面原生对象换成 Proxy 的地方，都要想一遍这个对象会不会被传回平台 API（构造器、`postMessage`、`structuredClone`、`instanceof` 之外的品牌检查）。目前只有 `Storage` 用了 Proxy，其它都是原型方法替换。
