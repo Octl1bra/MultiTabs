@@ -16,7 +16,7 @@ interface Props {
 }
 
 /**
- * options 页专用的二次确认（popup 里禁用浮层）。
+ * options 页专用的二次确认（popup 里禁用浮层）。结构照 AlertDialog 文档的 Default 示例。
  * 受控：挂载即打开，关掉就由父级卸载。
  */
 export function ConfirmDialog({ title, body, confirmLabel, onConfirm, onClose }: Props) {
@@ -36,7 +36,7 @@ export function ConfirmDialog({ title, body, confirmLabel, onConfirm, onClose }:
             <AlertDialog.Heading>{title}</AlertDialog.Heading>
           </AlertDialog.Header>
           <AlertDialog.Body>
-            <div className="text-sm text-muted">{body}</div>
+            <p>{body}</p>
             <InlineAlert message={error} className="mt-3" />
           </AlertDialog.Body>
           <AlertDialog.Footer>

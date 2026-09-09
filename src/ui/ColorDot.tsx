@@ -6,7 +6,7 @@ interface Props {
   className?: string;
 }
 
-/** 会话色点。颜色来自 PALETTE，只能内联，不走语义色。 */
+/** 会话色点（与工具栏角标同色）。颜色来自 PALETTE，只能内联，不走语义色。 */
 export function ColorDot({ color, title, className }: Props) {
   return (
     <span

@@ -18,6 +18,7 @@ const zh = {
   outOfScope: "当前页面不在范围内",
   sessionDeleted: "会话已删除",
   newSession: "新建会话",
+  newSessionDesc: "登录状态与其它 tab 完全隔离，互不干扰。",
   namePlaceholder: "会话名称",
   newTab: "新 tab",
   hostOnly: "仅隔离当前主机名",
@@ -36,6 +37,11 @@ const zh = {
 
   /* options */
   optionsTitle: "MultiTabs 管理",
+  optionsDesc: "管理各站点的隔离会话、cookie 罐与快捷键。",
+  colSession: "会话",
+  colScope: "作用域",
+  colActions: "操作",
+  about: "关于",
   tabSessions: "会话",
   tabSettings: "设置",
   sessionsCount: "{n} 个会话",

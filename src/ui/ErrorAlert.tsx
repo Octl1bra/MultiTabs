@@ -1,11 +1,10 @@
 import { Alert } from "@heroui/react";
 import type { ReactNode } from "react";
-import { cx } from "./useApi";
 
 interface Props {
   message: string | null | undefined;
   status?: "danger" | "success" | "warning" | "accent" | "default";
-  /** 右侧可选动作（比如"重试"） */
+  /** 右侧可选动作（比如"重试"），照 Alert 文档的排法放在 Content 之后 */
   action?: ReactNode;
   className?: string;
 }
@@ -14,10 +13,10 @@ interface Props {
 export function InlineAlert({ message, status = "danger", action, className }: Props) {
   if (!message) return null;
   return (
-    <Alert status={status} className={cx("gap-2 px-3 py-2 shadow-none", className)}>
-      <Alert.Indicator className="p-0.5" />
+    <Alert status={status} className={className}>
+      <Alert.Indicator />
       <Alert.Content>
-        <Alert.Title className="text-[13px] leading-5 wrap-break-word">{message}</Alert.Title>
+        <Alert.Title className="wrap-break-word">{message}</Alert.Title>
       </Alert.Content>
       {action}
     </Alert>

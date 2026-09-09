@@ -1,4 +1,4 @@
-import { Button, EmptyState, Spinner } from "@heroui/react";
+import { Button, Card, Chip, EmptyState, Spinner, Table } from "@heroui/react";
 import { useCallback, useMemo, useState } from "react";
 import { call, type SessionSummary } from "@/src/messaging";
 import { InlineAlert } from "../ErrorAlert";
@@ -9,7 +9,10 @@ import { SessionTableRow } from "./SessionTableRow";
 
 type Confirm = { kind: "delete" | "clear"; session: SessionSummary };
 
-/** 会话 tab：按 siteKey 分组的平铺列表（不用 Accordion，站点少时折叠只会碍事） */
+/**
+ * 会话 tab：每个 siteKey 一张 Card，卡片里一张 HeroUI Table（列照文档「Custom Cells」的排法：
+ * 会话（色点 + 名称 + cookies/tab 注脚）· 作用域 Chip · 最后使用 · 操作按钮组）。
+ */
 export function SessionsPanel() {
   const load = useCallback(() => call("listAllSessions", {}).then((r) => r.sessions), []);
   const { data, error: loadError, loading, refresh } = useQuery(load);
@@ -52,7 +55,7 @@ export function SessionsPanel() {
         <InlineAlert
           message={loadError}
           action={
-            <Button size="sm" variant="ghost" onPress={() => void refresh()}>
+            <Button size="sm" variant="danger" onPress={() => void refresh()}>
               {t("retry")}
             </Button>
           }
@@ -61,34 +64,52 @@ export function SessionsPanel() {
       <InlineAlert message={error} />
 
       {groups.length === 0 && !loadError ? (
-        <EmptyState className="py-10 text-center">
-          <p className="text-sm text-foreground">{t("emptyAll")}</p>
-          <p className="mt-1 text-xs">{t("emptyAllHint")}</p>
-        </EmptyState>
+        <Card>
+          <EmptyState className="py-8 text-center">
+            <p className="text-foreground">{t("emptyAll")}</p>
+            <p>{t("emptyAllHint")}</p>
+          </EmptyState>
+        </Card>
       ) : null}
 
       {groups.map(([siteKey, list]) => (
-        <section key={siteKey} className="overflow-hidden rounded-md border border-border">
-          <header className="flex items-baseline gap-2 border-b border-border bg-surface-secondary px-3 py-1.5">
-            <span className="font-mono text-xs font-medium">{siteKey}</span>
-            <span className="text-xs text-muted">{t("sessionsCount", { n: list.length })}</span>
-          </header>
-          <div className="divide-y divide-border">
-            {list.map((s) => (
-              <SessionTableRow
-                key={s.id}
-                session={s}
-                editing={editingId === s.id}
-                pending={pending}
-                onStartEdit={() => setEditingId(s.id)}
-                onCancelEdit={() => setEditingId(null)}
-                onSaveEdit={(name) => rename(s, name)}
-                onClear={() => setConfirm({ kind: "clear", session: s })}
-                onDelete={() => setConfirm({ kind: "delete", session: s })}
-              />
-            ))}
-          </div>
-        </section>
+        <Card key={siteKey}>
+          <Card.Header className="flex-row items-center gap-2">
+            <Card.Title className="font-mono">{siteKey}</Card.Title>
+            <Chip size="sm" variant="soft">
+              {t("sessionsCount", { n: list.length })}
+            </Chip>
+          </Card.Header>
+          <Card.Content>
+            <Table>
+              <Table.ScrollContainer>
+                <Table.Content aria-label={siteKey}>
+                  <Table.Header>
+                    <Table.Column isRowHeader>{t("colSession")}</Table.Column>
+                    <Table.Column>{t("colScope")}</Table.Column>
+                    <Table.Column>{t("lastUsed")}</Table.Column>
+                    <Table.Column className="text-end">{t("colActions")}</Table.Column>
+                  </Table.Header>
+                  <Table.Body>
+                    {list.map((s) => (
+                      <SessionTableRow
+                        key={s.id}
+                        session={s}
+                        editing={editingId === s.id}
+                        pending={pending}
+                        onStartEdit={() => setEditingId(s.id)}
+                        onCancelEdit={() => setEditingId(null)}
+                        onSaveEdit={(name) => rename(s, name)}
+                        onClear={() => setConfirm({ kind: "clear", session: s })}
+                        onDelete={() => setConfirm({ kind: "delete", session: s })}
+                      />
+                    ))}
+                  </Table.Body>
+                </Table.Content>
+              </Table.ScrollContainer>
+            </Table>
+          </Card.Content>
+        </Card>
       ))}
 
       {confirm ? (

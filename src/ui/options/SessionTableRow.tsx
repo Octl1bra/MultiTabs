@@ -1,4 +1,4 @@
-import { Button, Input } from "@heroui/react";
+import { Button, Description, Input, Table } from "@heroui/react";
 import { useState } from "react";
 import { MAX_SESSION_NAME } from "@/src/lib/types";
 import type { SessionSummary } from "@/src/messaging";
@@ -7,7 +7,6 @@ import { ColorDot } from "../ColorDot";
 import { t } from "../i18n";
 import { relativeTime } from "../relativeTime";
 import { ScopeBadge } from "../ScopeBadge";
-import { cx } from "../useApi";
 
 interface Props {
   session: SessionSummary;
@@ -20,7 +19,10 @@ interface Props {
   onDelete: () => void;
 }
 
-/** 一行：色点 · 名称（可内联改名）· 作用域 · cookies · tabs · 最后使用 · 操作 */
+/**
+ * Table.Row：色点 + 名称 / cookies · tabs 注脚 · 作用域 · 最后使用 · 操作
+ * 改名时名称格换成 Input，操作格换成 保存 / 取消——按钮留在操作列里，表格宽度不会被撑爆。
+ */
 export function SessionTableRow({
   session,
   editing,
@@ -32,105 +34,91 @@ export function SessionTableRow({
   onDelete,
 }: Props) {
   const busy = pending !== null;
-  const small = "h-7 px-2 text-xs";
+  const [draft, setDraft] = useState(session.name);
+  const trimmed = draft.trim();
+  const renaming = pending === `rename:${session.id}`;
+  const canSave = trimmed.length > 0 && trimmed !== session.name && !renaming;
+
+  const startEdit = () => {
+    setDraft(session.name);
+    onStartEdit();
+  };
+
   return (
-    <div className="flex items-center gap-3 px-3 py-2">
-      <ColorDot color={session.color} />
-      <div className="min-w-0 flex-1">
+    <Table.Row id={session.id}>
+      <Table.Cell>
         {editing ? (
-          <RenameInline
-            initial={session.name}
-            pending={pending === `rename:${session.id}`}
-            onSave={onSaveEdit}
-            onCancel={onCancelEdit}
+          <Input
+            aria-label={t("rename")}
+            variant="secondary"
+            className="w-48"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            maxLength={MAX_SESSION_NAME}
+            autoFocus
+            autoComplete="off"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && canSave) onSaveEdit(trimmed);
+              if (e.key === "Escape") onCancelEdit();
+            }}
           />
         ) : (
-          <span className="block truncate text-sm font-medium" title={session.name}>
-            {session.name}
-          </span>
+          <div className="flex max-w-64 items-center gap-3">
+            <ColorDot color={session.color} />
+            <div className="flex min-w-0 flex-col">
+              <span className="truncate font-medium text-foreground" title={session.name}>
+                {session.name}
+              </span>
+              <Description className="tabular-nums">
+                {t("cookies", { n: session.cookieCount })} ·{" "}
+                {t("tabsCount", { n: session.tabCount })}
+              </Description>
+            </div>
+          </div>
         )}
-      </div>
-      <ScopeBadge scope={session.scope} className="shrink-0" />
-      <span className="w-20 shrink-0 text-right text-xs text-muted tabular-nums">
-        {t("cookies", { n: session.cookieCount })}
-      </span>
-      <span className="w-14 shrink-0 text-right text-xs text-muted tabular-nums">
-        {t("tabsCount", { n: session.tabCount })}
-      </span>
-      <span
-        className="w-20 shrink-0 text-right text-xs text-muted tabular-nums"
-        title={`${t("lastUsed")}：${new Date(session.lastUsedAt).toLocaleString("zh-CN")}`}
-      >
-        {relativeTime(session.lastUsedAt)}
-      </span>
-      <div className={cx("flex shrink-0 items-center gap-1", editing && "invisible")}>
-        <Button size="sm" variant="ghost" className={small} isDisabled={busy} onPress={onStartEdit}>
-          {t("rename")}
-        </Button>
-        <Button size="sm" variant="ghost" className={small} isDisabled={busy} onPress={onClear}>
-          {t("clearJar")}
-        </Button>
-        <Button
-          size="sm"
-          variant="danger-soft"
-          className={small}
-          isDisabled={busy}
-          onPress={onDelete}
+      </Table.Cell>
+      <Table.Cell>
+        <ScopeBadge scope={session.scope} />
+      </Table.Cell>
+      <Table.Cell>
+        <span
+          className="text-muted tabular-nums"
+          title={`${t("lastUsed")}：${new Date(session.lastUsedAt).toLocaleString("zh-CN")}`}
         >
-          {t("delete")}
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-function RenameInline({
-  initial,
-  pending,
-  onSave,
-  onCancel,
-}: {
-  initial: string;
-  pending: boolean;
-  onSave: (name: string) => void;
-  onCancel: () => void;
-}) {
-  const [name, setName] = useState(initial);
-  const trimmed = name.trim();
-  const canSave = trimmed.length > 0 && trimmed !== initial && !pending;
-  return (
-    <div className="flex items-center gap-2">
-      <Input
-        aria-label={t("rename")}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        maxLength={MAX_SESSION_NAME}
-        autoFocus
-        autoComplete="off"
-        className="h-7 w-56 py-0 text-sm"
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && canSave) onSave(trimmed);
-          if (e.key === "Escape") onCancel();
-        }}
-      />
-      <ActionButton
-        size="sm"
-        className="h-7 px-2 text-xs"
-        isDisabled={!canSave}
-        isPending={pending}
-        onPress={() => onSave(trimmed)}
-      >
-        {t("save")}
-      </ActionButton>
-      <Button
-        size="sm"
-        variant="ghost"
-        className="h-7 px-2 text-xs"
-        isDisabled={pending}
-        onPress={onCancel}
-      >
-        {t("cancel")}
-      </Button>
-    </div>
+          {relativeTime(session.lastUsedAt)}
+        </span>
+      </Table.Cell>
+      <Table.Cell>
+        <div className="flex items-center justify-end gap-1">
+          {editing ? (
+            <>
+              <ActionButton
+                size="sm"
+                isDisabled={!canSave}
+                isPending={renaming}
+                onPress={() => onSaveEdit(trimmed)}
+              >
+                {t("save")}
+              </ActionButton>
+              <Button size="sm" variant="tertiary" isDisabled={renaming} onPress={onCancelEdit}>
+                {t("cancel")}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button size="sm" variant="ghost" isDisabled={busy} onPress={startEdit}>
+                {t("rename")}
+              </Button>
+              <Button size="sm" variant="ghost" isDisabled={busy} onPress={onClear}>
+                {t("clearJar")}
+              </Button>
+              <Button size="sm" variant="danger-soft" isDisabled={busy} onPress={onDelete}>
+                {t("delete")}
+              </Button>
+            </>
+          )}
+        </div>
+      </Table.Cell>
+    </Table.Row>
   );
 }

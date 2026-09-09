@@ -1,3 +1,4 @@
+import { Description } from "@heroui/react";
 import type { SessionSummary } from "@/src/messaging";
 import { ActionButton } from "./ActionButton";
 import { ColorDot } from "./ColorDot";
@@ -16,30 +17,34 @@ interface Props {
 }
 
 /**
- * 自绘列表行（不用 ListBox）：色点 · 名称 · N cookies · [打开][此处]
- * 高亮行左侧压一条 2px 会话色边，比整行染色安静。
+ * 一行 = 色点 · 名称/N cookies · [作用域] · [打开][此处]
+ * 形状照 HeroUI ListBox.Item（rounded-2xl px-2 py-1.5 gap-3，Label + Description 上下叠），
+ * 但不用 ListBox：一行要放两个按钮，嵌在可按压的 item 里不自然。
+ * 当前挂载的那行用 bg-surface-secondary 垫一层。
  */
 export function SessionRow({ session, active, pending, onOpen, onHere }: Props) {
   const busy = pending !== null;
-  const btn = "h-6 min-w-0 px-2 text-xs";
   return (
     <div
-      className={cx("flex items-center gap-2 px-3 py-1.5", active && "bg-default-soft")}
-      style={active ? { boxShadow: `inset 2px 0 0 ${session.color}` } : undefined}
+      className={cx(
+        "flex items-center gap-3 rounded-2xl px-2 py-1.5",
+        active && "bg-surface-secondary",
+      )}
       data-active={active || undefined}
     >
       <ColorDot color={session.color} />
-      <span className={cx("min-w-0 flex-1 truncate", active && "font-medium")} title={session.name}>
-        {session.name}
-      </span>
-      {session.scope === "host" ? <ScopeBadge scope="host" className="shrink-0" /> : null}
-      <span className="shrink-0 text-xs text-muted tabular-nums">
-        {t("cookies", { n: session.cookieCount })}
-      </span>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <span className="truncate text-sm font-medium text-foreground" title={session.name}>
+          {session.name}
+        </span>
+        <Description className="tabular-nums">
+          {t("cookies", { n: session.cookieCount })}
+        </Description>
+      </div>
+      {session.scope === "host" ? <ScopeBadge scope="host" /> : null}
       <ActionButton
         size="sm"
         variant="secondary"
-        className={btn}
         isDisabled={busy}
         isPending={pending === `open:${session.id}`}
         onPress={onOpen}
@@ -48,8 +53,7 @@ export function SessionRow({ session, active, pending, onOpen, onHere }: Props) 
       </ActionButton>
       <ActionButton
         size="sm"
-        variant="ghost"
-        className={btn}
+        variant="tertiary"
         isDisabled={busy || active}
         isPending={pending === `here:${session.id}`}
         onPress={onHere}

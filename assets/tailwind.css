@@ -3,10 +3,14 @@
 @source "../node_modules/@heroui/react/dist/**/*.js";
 
 /*
- * HeroUI 默认 --radius 0.5rem，按钮/Alert 会是 24px 的药丸。
- * 这个扩展的气质是 Linear 那种克制的小圆角，所以整体收一档：
- * 3xl → 12px，md → 4.5px，输入框 → 6px。只动这一个变量，别的都跟着走。
+ * 圆角、阴影、字号全部走 HeroUI 默认 token（--radius 0.5rem → 药丸按钮、rounded-3xl 卡片）。
+ * 视觉参照就是 HeroUI 文档里 Card / Surface / Table 的示例页，不在组件上做任何尺寸覆盖。
+ *
+ * 唯一的主题级声明：这个扩展最窄的视口就是 360px 的 popup，永远不会跑在手机上，
+ * 所以把 sm / md 断点提前到 320px，让 HeroUI 的"桌面尺寸"（h-9 / h-8 按钮、text-sm 输入框）
+ * 在 popup 里也生效，而不是落到它为触屏准备的 h-10 / text-base。
  */
-:root {
-  --radius: 0.25rem;
+@theme {
+  --breakpoint-sm: 20rem;
+  --breakpoint-md: 20rem;
 }

@@ -1,4 +1,4 @@
-import { Button, Kbd } from "@heroui/react";
+import { Button, Card, Kbd } from "@heroui/react";
 import { useState } from "react";
 import { call } from "@/src/messaging";
 import { ActionButton } from "../ActionButton";
@@ -9,16 +9,7 @@ import { useAction } from "../useApi";
 const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
 const SHORTCUTS_URL = "chrome://extensions/shortcuts";
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="grid grid-cols-[8rem_minmax(0,1fr)] items-start gap-4 px-3 py-3">
-      <div className="pt-0.5 text-sm text-muted">{label}</div>
-      <div className="min-w-0 text-sm">{children}</div>
-    </div>
-  );
-}
-
-/** 设置 tab：快捷键 / 清理过期 cookie / 版本 */
+/** 设置 tab：快捷键 / 清理过期 cookie / 关于，一项一张 Card */
 export function SettingsPanel() {
   const { pending, error, run } = useAction();
   const [purged, setPurged] = useState<number | null>(null);
@@ -32,9 +23,14 @@ export function SettingsPanel() {
   return (
     <div className="flex flex-col gap-4">
       <InlineAlert message={error} />
-      <section className="divide-y divide-border rounded-md border border-border">
-        <Row label={t("shortcut")}>
-          <div className="flex flex-wrap items-center gap-2">
+
+      <Card>
+        <Card.Header>
+          <Card.Title>{t("shortcut")}</Card.Title>
+          <Card.Description>{t("shortcutDesc")}</Card.Description>
+        </Card.Header>
+        <Card.Content>
+          <div className="flex flex-wrap items-center gap-3">
             {/* mac 显示 ⌘⇧Y；其它平台 HeroUI 的 ctrl 会画成 ⌃，不如直接写 Ctrl+Shift+Y */}
             {isMac ? (
               <Kbd>
@@ -47,47 +43,51 @@ export function SettingsPanel() {
                 <Kbd.Content>Ctrl+Shift+Y</Kbd.Content>
               </Kbd>
             )}
-            <span>{t("shortcutDesc")}</span>
+            <span className="text-sm text-muted">{t("shortcutHint")}</span>
           </div>
-          <p className="mt-1.5 text-xs text-muted">
-            {t("shortcutHint")}
-            {/* 扩展页面不能直接 <a href="chrome://…">，得走 tabs.create */}
-            <Button
-              size="sm"
-              variant="ghost"
-              className="ms-1 h-6 px-1.5 text-xs text-link"
-              onPress={() => void chrome.tabs.create({ url: SHORTCUTS_URL })}
-            >
-              {t("openShortcuts")}
-            </Button>
-          </p>
-        </Row>
+        </Card.Content>
+        <Card.Footer>
+          {/* 扩展页面不能直接 <a href="chrome://…">，得走 tabs.create */}
+          <Button
+            size="sm"
+            variant="secondary"
+            onPress={() => void chrome.tabs.create({ url: SHORTCUTS_URL })}
+          >
+            {t("openShortcuts")}
+          </Button>
+        </Card.Footer>
+      </Card>
 
-        <Row label={t("maintenance")}>
-          <div className="flex flex-wrap items-center gap-3">
-            <ActionButton
-              size="sm"
-              variant="secondary"
-              isPending={pending === "purge"}
-              onPress={purge}
-            >
-              {t("purge")}
-            </ActionButton>
-            <span className="text-xs text-muted">{t("purgeDesc")}</span>
-          </div>
-          {purged !== null ? (
-            <InlineAlert
-              status="success"
-              message={t("purgeResult", { n: purged })}
-              className="mt-2"
-            />
-          ) : null}
-        </Row>
+      <Card>
+        <Card.Header>
+          <Card.Title>{t("maintenance")}</Card.Title>
+          <Card.Description>{t("purgeDesc")}</Card.Description>
+        </Card.Header>
+        {purged !== null ? (
+          <Card.Content>
+            <InlineAlert status="success" message={t("purgeResult", { n: purged })} />
+          </Card.Content>
+        ) : null}
+        <Card.Footer>
+          <ActionButton
+            size="sm"
+            variant="secondary"
+            isPending={pending === "purge"}
+            onPress={purge}
+          >
+            {t("purge")}
+          </ActionButton>
+        </Card.Footer>
+      </Card>
 
-        <Row label={t("version")}>
-          <span className="font-mono text-xs">{version}</span>
-        </Row>
-      </section>
+      <Card>
+        <Card.Header>
+          <Card.Title>{t("about")}</Card.Title>
+          <Card.Description>
+            {t("version")} <span className="font-mono">{version}</span>
+          </Card.Description>
+        </Card.Header>
+      </Card>
     </div>
   );
 }
