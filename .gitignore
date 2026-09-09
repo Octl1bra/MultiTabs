@@ -1,0 +1,10 @@
+node_modules/
+.output/
+.wxt/
+dist/
+*.log
+.DS_Store
+test/fixtures/site/.certs/
+test/e2e/.profiles/
+test/spikes/m0/*.pem
+test/spikes/m0/spki.txt

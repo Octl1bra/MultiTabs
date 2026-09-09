@@ -1,0 +1,805 @@
+meta {
+  chrome: 'Chrome/152.0.7977.77',
+  puppeteerCore: '25.10.0',
+  headless: true,
+  extId: 'akfcmkfmjcpjfkllceeiffhifcecafce',
+  swUrl: 'chrome-extension://akfcmkfmjcpjfkllceeiffhifcecafce/bg.js',
+  userDataDir: '/var/folders/xf/2l5mdzk5341gr4_g7782n5s80000gn/T/mt-spike-IUQhHV'
+}
+rules [{"action":{"responseHeaders":[{"header":"Set-Cookie","operation":"remove"}],"type":"modifyHeaders"},"condition":{"requestDomains":["app.localtest.me"]},"id":1,"priority":1},{"action":{"responseHeaders":[{"header":"Server-Timing","operation":"append","value":"mt;desc=\"c3Bpa2U\""}],"type":"modifyHeaders"},"condition":{"requestDomains":["app.localtest.me"],"resourceTypes":["main_frame","sub_frame"]},"id":2,"priority":1}]
+Q1 {
+ "app": {
+  "url": "https://app.localtest.me:8443/setcookie",
+  "documentCookie": "spike=1",
+  "cookiesGetAll_app": [
+   {
+    "domain": "app.localtest.me",
+    "hostOnly": true,
+    "httpOnly": false,
+    "name": "spike",
+    "path": "/",
+    "sameSite": "unspecified",
+    "secure": true,
+    "session": true,
+    "storeId": "0",
+    "value": "1"
+   },
+   {
+    "domain": "app.localtest.me",
+    "hostOnly": true,
+    "httpOnly": true,
+    "name": "spike2",
+    "path": "/",
+    "sameSite": "unspecified",
+    "secure": true,
+    "session": true,
+    "storeId": "0",
+    "value": "2"
+   }
+  ],
+  "webRequest": [
+   {
+    "frameId": 0,
+    "headerCount": 7,
+    "headers": [
+     {
+      "name": "Set-Cookie",
+      "value": "spike=1; Path=/; Secure"
+     },
+     {
+      "name": "Set-Cookie",
+      "value": "spike2=2; Path=/; Secure; HttpOnly"
+     }
+    ],
+    "requestId": "3",
+    "statusCode": 200,
+    "tabId": 2018613827,
+    "timeStamp": 1788946105064.746,
+    "type": "main_frame",
+    "url": "https://app.localtest.me:8443/setcookie"
+   }
+  ]
+ },
+ "plainControl": {
+  "url": "https://plain.localtest.me:8443/setcookie",
+  "documentCookie": "spike=1",
+  "cookiesGetAll_plain": [
+   {
+    "domain": "plain.localtest.me",
+    "hostOnly": true,
+    "httpOnly": false,
+    "name": "spike",
+    "path": "/",
+    "sameSite": "unspecified",
+    "secure": true,
+    "session": true,
+    "storeId": "0",
+    "value": "1"
+   },
+   {
+    "domain": "plain.localtest.me",
+    "hostOnly": true,
+    "httpOnly": true,
+    "name": "spike2",
+    "path": "/",
+    "sameSite": "unspecified",
+    "secure": true,
+    "session": true,
+    "storeId": "0",
+    "value": "2"
+   }
+  ],
+  "webRequest": [
+   {
+    "frameId": 0,
+    "headerCount": 7,
+    "headers": [
+     {
+      "name": "Set-Cookie",
+      "value": "spike=1; Path=/; Secure"
+     },
+     {
+      "name": "Set-Cookie",
+      "value": "spike2=2; Path=/; Secure; HttpOnly"
+     }
+    ],
+    "requestId": "5",
+    "statusCode": 200,
+    "tabId": 2018613827,
+    "timeStamp": 1788946105778.518,
+    "type": "main_frame",
+    "url": "https://plain.localtest.me:8443/setcookie"
+   }
+  ]
+ },
+ "allCookies": [
+  {
+   "domain": "app.localtest.me",
+   "hostOnly": true,
+   "httpOnly": false,
+   "name": "spike",
+   "path": "/",
+   "sameSite": "unspecified",
+   "secure": true,
+   "session": true,
+   "storeId": "0",
+   "value": "1"
+  },
+  {
+   "domain": "app.localtest.me",
+   "hostOnly": true,
+   "httpOnly": true,
+   "name": "spike2",
+   "path": "/",
+   "sameSite": "unspecified",
+   "secure": true,
+   "session": true,
+   "storeId": "0",
+   "value": "2"
+  },
+  {
+   "domain": "plain.localtest.me",
+   "hostOnly": true,
+   "httpOnly": false,
+   "name": "spike",
+   "path": "/",
+   "sameSite": "unspecified",
+   "secure": true,
+   "session": true,
+   "storeId": "0",
+   "value": "1"
+  },
+  {
+   "domain": "plain.localtest.me",
+   "hostOnly": true,
+   "httpOnly": true,
+   "name": "spike2",
+   "path": "/",
+   "sameSite": "unspecified",
+   "secure": true,
+   "session": true,
+   "storeId": "0",
+   "value": "2"
+  }
+ ]
+}
+Q2 {
+ "firstLoad": {
+  "main": {
+   "url": "https://app.localtest.me:8443/st",
+   "mtProbe": {
+    "navEntryCount": 1,
+    "hasNavEntry": true,
+    "serverTiming": [
+     {
+      "name": "site",
+      "duration": 1,
+      "description": ""
+     },
+     {
+      "name": "mt",
+      "duration": 0,
+      "description": "c3Bpa2U"
+     }
+    ],
+    "hasMt": true,
+    "hasSite": true,
+    "documentElementExists": true,
+    "wroteDataset": true,
+    "readyState": "loading",
+    "currentScript": null,
+    "headChildCount": null,
+    "bodyExists": false,
+    "href": "https://app.localtest.me:8443/st",
+    "isTop": true,
+    "t": 8.100000023841858
+   },
+   "firstScript": {
+    "st": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "marker": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "readyState": "loading"
+   },
+   "datasetAfterLoad": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+   "serverTimingAfterLoad": [
+    {
+     "name": "site",
+     "duration": 1,
+     "description": ""
+    },
+    {
+     "name": "mt",
+     "duration": 0,
+     "description": "c3Bpa2U"
+    }
+   ],
+   "transferSize": 668,
+   "deliveryType": ""
+  },
+  "iframe": {
+   "url": "https://app.localtest.me:8443/st-frame",
+   "mtProbe": {
+    "navEntryCount": 1,
+    "hasNavEntry": true,
+    "serverTiming": [
+     {
+      "name": "site",
+      "duration": 1,
+      "description": ""
+     },
+     {
+      "name": "mt",
+      "duration": 0,
+      "description": "c3Bpa2U"
+     }
+    ],
+    "hasMt": true,
+    "hasSite": true,
+    "documentElementExists": true,
+    "wroteDataset": true,
+    "readyState": "loading",
+    "currentScript": null,
+    "headChildCount": null,
+    "bodyExists": false,
+    "href": "https://app.localtest.me:8443/st-frame",
+    "isTop": false,
+    "t": 15.200000047683716
+   },
+   "firstScript": {
+    "st": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "marker": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "readyState": "loading"
+   },
+   "datasetAfterLoad": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+   "serverTimingAfterLoad": [
+    {
+     "name": "site",
+     "duration": 1,
+     "description": ""
+    },
+    {
+     "name": "mt",
+     "duration": 0,
+     "description": "c3Bpa2U"
+    }
+   ],
+   "transferSize": 640,
+   "deliveryType": ""
+  },
+  "webRequest": [
+   {
+    "frameId": 0,
+    "headerCount": 7,
+    "headers": [
+     {
+      "name": "Cache-Control",
+      "value": "max-age=600"
+     },
+     {
+      "name": "Server-Timing",
+      "value": "site;dur=1"
+     }
+    ],
+    "requestId": "7",
+    "statusCode": 200,
+    "tabId": 2018613827,
+    "timeStamp": 1788946106107.45,
+    "type": "main_frame",
+    "url": "https://app.localtest.me:8443/st"
+   },
+   {
+    "frameId": 4,
+    "headerCount": 7,
+    "headers": [
+     {
+      "name": "Cache-Control",
+      "value": "max-age=600"
+     },
+     {
+      "name": "Server-Timing",
+      "value": "site;dur=1"
+     }
+    ],
+    "requestId": "8",
+    "statusCode": 200,
+    "tabId": 2018613827,
+    "timeStamp": 1788946106124.638,
+    "type": "sub_frame",
+    "url": "https://app.localtest.me:8443/st-frame"
+   }
+  ],
+  "serverRequests": 2
+ },
+ "secondLoadViaBlank": {
+  "main": {
+   "url": "https://app.localtest.me:8443/st",
+   "mtProbe": {
+    "navEntryCount": 1,
+    "hasNavEntry": true,
+    "serverTiming": [
+     {
+      "name": "site",
+      "duration": 1,
+      "description": ""
+     },
+     {
+      "name": "mt",
+      "duration": 0,
+      "description": "c3Bpa2U"
+     }
+    ],
+    "hasMt": true,
+    "hasSite": true,
+    "documentElementExists": true,
+    "wroteDataset": true,
+    "readyState": "loading",
+    "currentScript": null,
+    "headChildCount": null,
+    "bodyExists": false,
+    "href": "https://app.localtest.me:8443/st",
+    "isTop": true,
+    "t": 5.299999952316284
+   },
+   "firstScript": {
+    "st": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "marker": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "readyState": "loading"
+   },
+   "datasetAfterLoad": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+   "serverTimingAfterLoad": [
+    {
+     "name": "site",
+     "duration": 1,
+     "description": ""
+    },
+    {
+     "name": "mt",
+     "duration": 0,
+     "description": "c3Bpa2U"
+    }
+   ],
+   "transferSize": 0,
+   "deliveryType": "cache"
+  },
+  "iframe": {
+   "url": "https://app.localtest.me:8443/st-frame",
+   "mtProbe": {
+    "navEntryCount": 1,
+    "hasNavEntry": true,
+    "serverTiming": [
+     {
+      "name": "site",
+      "duration": 1,
+      "description": ""
+     },
+     {
+      "name": "mt",
+      "duration": 0,
+      "description": "c3Bpa2U"
+     }
+    ],
+    "hasMt": true,
+    "hasSite": true,
+    "documentElementExists": true,
+    "wroteDataset": true,
+    "readyState": "loading",
+    "currentScript": null,
+    "headChildCount": null,
+    "bodyExists": false,
+    "href": "https://app.localtest.me:8443/st-frame",
+    "isTop": false,
+    "t": 8.600000023841858
+   },
+   "firstScript": {
+    "st": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "marker": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "readyState": "loading"
+   },
+   "datasetAfterLoad": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+   "serverTimingAfterLoad": [
+    {
+     "name": "site",
+     "duration": 1,
+     "description": ""
+    },
+    {
+     "name": "mt",
+     "duration": 0,
+     "description": "c3Bpa2U"
+    }
+   ],
+   "transferSize": 0,
+   "deliveryType": "cache"
+  },
+  "webRequest": [
+   {
+    "frameId": 0,
+    "headerCount": 4,
+    "headers": [
+     {
+      "name": "Cache-Control",
+      "value": "max-age=600"
+     },
+     {
+      "name": "Server-Timing",
+      "value": "site;dur=1"
+     }
+    ],
+    "requestId": "9",
+    "statusCode": 200,
+    "tabId": 2018613827,
+    "timeStamp": 1788946106507.621,
+    "type": "main_frame",
+    "url": "https://app.localtest.me:8443/st"
+   },
+   {
+    "frameId": 5,
+    "headerCount": 4,
+    "headers": [
+     {
+      "name": "Cache-Control",
+      "value": "max-age=600"
+     },
+     {
+      "name": "Server-Timing",
+      "value": "site;dur=1"
+     }
+    ],
+    "requestId": "10",
+    "statusCode": 200,
+    "tabId": 2018613827,
+    "timeStamp": 1788946106516.613,
+    "type": "sub_frame",
+    "url": "https://app.localtest.me:8443/st-frame"
+   }
+  ],
+  "newServerRequests": []
+ },
+ "thirdLoadSameUrlDirect": {
+  "main": {
+   "url": "https://app.localtest.me:8443/st",
+   "mtProbe": {
+    "navEntryCount": 1,
+    "hasNavEntry": true,
+    "serverTiming": [
+     {
+      "name": "site",
+      "duration": 1,
+      "description": ""
+     },
+     {
+      "name": "mt",
+      "duration": 0,
+      "description": "c3Bpa2U"
+     }
+    ],
+    "hasMt": true,
+    "hasSite": true,
+    "documentElementExists": true,
+    "wroteDataset": true,
+    "readyState": "loading",
+    "currentScript": null,
+    "headChildCount": null,
+    "bodyExists": false,
+    "href": "https://app.localtest.me:8443/st",
+    "isTop": true,
+    "t": 11.800000071525574
+   },
+   "firstScript": {
+    "st": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "marker": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "readyState": "loading"
+   },
+   "datasetAfterLoad": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+   "serverTimingAfterLoad": [
+    {
+     "name": "site",
+     "duration": 1,
+     "description": ""
+    },
+    {
+     "name": "mt",
+     "duration": 0,
+     "description": "c3Bpa2U"
+    }
+   ],
+   "transferSize": 0,
+   "deliveryType": "cache"
+  },
+  "iframe": {
+   "url": "https://app.localtest.me:8443/st-frame",
+   "mtProbe": {
+    "navEntryCount": 1,
+    "hasNavEntry": true,
+    "serverTiming": [
+     {
+      "name": "site",
+      "duration": 1,
+      "description": ""
+     },
+     {
+      "name": "mt",
+      "duration": 0,
+      "description": "c3Bpa2U"
+     }
+    ],
+    "hasMt": true,
+    "hasSite": true,
+    "documentElementExists": true,
+    "wroteDataset": true,
+    "readyState": "loading",
+    "currentScript": null,
+    "headChildCount": null,
+    "bodyExists": false,
+    "href": "https://app.localtest.me:8443/st-frame",
+    "isTop": false,
+    "t": 12.300000071525574
+   },
+   "firstScript": {
+    "st": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "marker": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+    "readyState": "loading"
+   },
+   "datasetAfterLoad": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"},{\"name\":\"mt\",\"duration\":0,\"description\":\"c3Bpa2U\"}]",
+   "serverTimingAfterLoad": [
+    {
+     "name": "site",
+     "duration": 1,
+     "description": ""
+    },
+    {
+     "name": "mt",
+     "duration": 0,
+     "description": "c3Bpa2U"
+    }
+   ],
+   "transferSize": 0,
+   "deliveryType": "cache"
+  },
+  "webRequest": [
+   {
+    "frameId": 0,
+    "headerCount": 4,
+    "headers": [
+     {
+      "name": "Cache-Control",
+      "value": "max-age=600"
+     },
+     {
+      "name": "Server-Timing",
+      "value": "site;dur=1"
+     }
+    ],
+    "requestId": "11",
+    "statusCode": 200,
+    "tabId": 2018613827,
+    "timeStamp": 1788946106836.234,
+    "type": "main_frame",
+    "url": "https://app.localtest.me:8443/st"
+   },
+   {
+    "frameId": 6,
+    "headerCount": 4,
+    "headers": [
+     {
+      "name": "Cache-Control",
+      "value": "max-age=600"
+     },
+     {
+      "name": "Server-Timing",
+      "value": "site;dur=1"
+     }
+    ],
+    "requestId": "12",
+    "statusCode": 200,
+    "tabId": 2018613827,
+    "timeStamp": 1788946106853.302,
+    "type": "sub_frame",
+    "url": "https://app.localtest.me:8443/st-frame"
+   }
+  ],
+  "newServerRequests": []
+ },
+ "plainControl": {
+  "main": {
+   "url": "https://plain.localtest.me:8443/st",
+   "mtProbe": {
+    "navEntryCount": 1,
+    "hasNavEntry": true,
+    "serverTiming": [
+     {
+      "name": "site",
+      "duration": 1,
+      "description": ""
+     }
+    ],
+    "hasMt": false,
+    "hasSite": true,
+    "documentElementExists": true,
+    "wroteDataset": true,
+    "readyState": "loading",
+    "currentScript": null,
+    "headChildCount": null,
+    "bodyExists": false,
+    "href": "https://plain.localtest.me:8443/st",
+    "isTop": true,
+    "t": 8.299999952316284
+   },
+   "firstScript": {
+    "st": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"}]",
+    "marker": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"}]",
+    "readyState": "loading"
+   },
+   "datasetAfterLoad": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"}]",
+   "serverTimingAfterLoad": [
+    {
+     "name": "site",
+     "duration": 1,
+     "description": ""
+    }
+   ],
+   "transferSize": 670,
+   "deliveryType": ""
+  },
+  "iframe": {
+   "url": "https://plain.localtest.me:8443/st-frame",
+   "mtProbe": {
+    "navEntryCount": 1,
+    "hasNavEntry": true,
+    "serverTiming": [
+     {
+      "name": "site",
+      "duration": 1,
+      "description": ""
+     }
+    ],
+    "hasMt": false,
+    "hasSite": true,
+    "documentElementExists": true,
+    "wroteDataset": true,
+    "readyState": "loading",
+    "currentScript": null,
+    "headChildCount": null,
+    "bodyExists": false,
+    "href": "https://plain.localtest.me:8443/st-frame",
+    "isTop": false,
+    "t": 25.799999952316284
+   },
+   "firstScript": {
+    "st": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"}]",
+    "marker": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"}]",
+    "readyState": "loading"
+   },
+   "datasetAfterLoad": "[{\"name\":\"site\",\"duration\":1,\"description\":\"\"}]",
+   "serverTimingAfterLoad": [
+    {
+     "name": "site",
+     "duration": 1,
+     "description": ""
+    }
+   ],
+   "transferSize": 642,
+   "deliveryType": ""
+  },
+  "webRequest": [
+   {
+    "frameId": 0,
+    "headerCount": 7,
+    "headers": [
+     {
+      "name": "Cache-Control",
+      "value": "max-age=600"
+     },
+     {
+      "name": "Server-Timing",
+      "value": "site;dur=1"
+     }
+    ],
+    "requestId": "13",
+    "statusCode": 200,
+    "tabId": 2018613827,
+    "timeStamp": 1788946107174.638,
+    "type": "main_frame",
+    "url": "https://plain.localtest.me:8443/st"
+   },
+   {
+    "frameId": 7,
+    "headerCount": 7,
+    "headers": [
+     {
+      "name": "Cache-Control",
+      "value": "max-age=600"
+     },
+     {
+      "name": "Server-Timing",
+      "value": "site;dur=1"
+     }
+    ],
+    "requestId": "14",
+    "statusCode": 200,
+    "tabId": 2018613827,
+    "timeStamp": 1788946107201.449,
+    "type": "sub_frame",
+    "url": "https://plain.localtest.me:8443/st-frame"
+   }
+  ]
+ }
+}
+Q4 {
+ "httpsTop": {
+  "tabId": 2018613827,
+  "url": "https://app.localtest.me:8443/",
+  "result": {
+   "ok": {
+    "partitionKey": {
+     "hasCrossSiteAncestor": false,
+     "topLevelSite": "https://localtest.me"
+    }
+   }
+  },
+  "withFrameId0": {
+   "ok": {
+    "partitionKey": {
+     "hasCrossSiteAncestor": false,
+     "topLevelSite": "https://localtest.me"
+    }
+   }
+  }
+ },
+ "httpTop": {
+  "tabId": 2018613827,
+  "url": "http://app.localtest.me:8080/",
+  "result": {
+   "ok": {
+    "partitionKey": {
+     "hasCrossSiteAncestor": false,
+     "topLevelSite": "http://localtest.me"
+    }
+   }
+  }
+ },
+ "crossSiteEmbed": {
+  "tabId": 2018613827,
+  "frames": [
+   {
+    "documentId": "DD004310A32B59547F0D57A1E31C8FC4",
+    "frameId": 0,
+    "result": "http://localhost:8080/embed"
+   },
+   {
+    "documentId": "7E01025DCAD83C2BE2BE2CB7312B0852",
+    "frameId": 8,
+    "result": "https://app.localtest.me:8443/"
+   }
+  ],
+  "topResult": {
+   "ok": {
+    "partitionKey": {
+     "hasCrossSiteAncestor": false,
+     "topLevelSite": "http://localhost"
+    }
+   }
+  },
+  "iframeResult": {
+   "ok": {
+    "partitionKey": {
+     "hasCrossSiteAncestor": true,
+     "topLevelSite": "http://localhost"
+    }
+   }
+  },
+  "iframeByDocumentId": {
+   "ok": {
+    "partitionKey": {
+     "hasCrossSiteAncestor": true,
+     "topLevelSite": "http://localhost"
+    }
+   }
+  }
+ },
+ "extensionPageTab": {
+  "tabId": 2018613826,
+  "result": {
+   "error": "No host permissions for cookies at url: \"chrome-extension://akfcmkfmjcpjfkllceeiffhifcecafce/\"."
+  }
+ }
+}

@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+@source "../node_modules/@heroui/react/dist/**/*.js";
+
+/*
+ * HeroUI 默认 --radius 0.5rem，按钮/Alert 会是 24px 的药丸。
+ * 这个扩展的气质是 Linear 那种克制的小圆角，所以整体收一档：
+ * 3xl → 12px，md → 4.5px，输入框 → 6px。只动这一个变量，别的都跟着走。
+ */
+:root {
+  --radius: 0.25rem;
+}

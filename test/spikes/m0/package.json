@@ -1,0 +1,9 @@
+{
+  "name": "mt-spike-m0",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "puppeteer-core": "^25.10.0"
+  }
+}

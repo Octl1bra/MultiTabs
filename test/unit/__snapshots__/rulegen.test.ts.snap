@@ -1,0 +1,392 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateRules > domain cookie + hostOnly cookie：两个 target，各两条，优先级按段数 1`] = `
+[
+  {
+    "action": {
+      "requestHeaders": [
+        {
+          "header": "Cookie",
+          "operation": "remove",
+        },
+      ],
+      "responseHeaders": [
+        {
+          "header": "Set-Cookie",
+          "operation": "remove",
+        },
+        {
+          "header": "Clear-Site-Data",
+          "operation": "remove",
+        },
+      ],
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "requestDomains": [
+        "localtest.me",
+      ],
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+        "stylesheet",
+        "script",
+        "image",
+        "font",
+        "object",
+        "xmlhttprequest",
+        "ping",
+        "csp_report",
+        "media",
+        "websocket",
+        "webtransport",
+        "webbundle",
+        "other",
+      ],
+      "tabIds": [
+        7,
+      ],
+    },
+    "id": 1,
+    "priority": 1000,
+  },
+  {
+    "action": {
+      "requestHeaders": [
+        {
+          "header": "Cache-Control",
+          "operation": "set",
+          "value": "no-cache",
+        },
+      ],
+      "responseHeaders": undefined,
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "requestDomains": [
+        "localtest.me",
+      ],
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+        "xmlhttprequest",
+      ],
+      "tabIds": [
+        7,
+      ],
+    },
+    "id": 2,
+    "priority": 1000,
+  },
+  {
+    "action": {
+      "responseHeaders": [
+        {
+          "header": "Server-Timing",
+          "operation": "append",
+          "value": "<signal>",
+        },
+      ],
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "requestDomains": [
+        "localtest.me",
+      ],
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+      ],
+      "tabIds": [
+        7,
+      ],
+    },
+    "id": 3,
+    "priority": 1000,
+  },
+  {
+    "action": {
+      "requestHeaders": [
+        {
+          "header": "Cookie",
+          "operation": "set",
+          "value": "who=A; sid=A",
+        },
+      ],
+      "responseHeaders": [
+        {
+          "header": "Server-Timing",
+          "operation": "append",
+          "value": "<signal>",
+        },
+      ],
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "requestDomains": [
+        "app.localtest.me",
+      ],
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+      ],
+      "tabIds": [
+        7,
+      ],
+      "urlFilter": "|https:",
+    },
+    "id": 4,
+    "priority": 3003,
+  },
+  {
+    "action": {
+      "requestHeaders": [
+        {
+          "header": "Cookie",
+          "operation": "set",
+          "value": "who=A; sid=A",
+        },
+      ],
+      "responseHeaders": undefined,
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "domainType": "firstParty",
+      "excludedResourceTypes": [
+        "main_frame",
+        "sub_frame",
+      ],
+      "requestDomains": [
+        "app.localtest.me",
+      ],
+      "tabIds": [
+        7,
+      ],
+      "urlFilter": "|https:",
+    },
+    "id": 5,
+    "priority": 3003,
+  },
+  {
+    "action": {
+      "requestHeaders": [
+        {
+          "header": "Cookie",
+          "operation": "set",
+          "value": "who=A",
+        },
+      ],
+      "responseHeaders": [
+        {
+          "header": "Server-Timing",
+          "operation": "append",
+          "value": "<signal>",
+        },
+      ],
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "requestDomains": [
+        "localtest.me",
+      ],
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+      ],
+      "tabIds": [
+        7,
+      ],
+      "urlFilter": "|https:",
+    },
+    "id": 6,
+    "priority": 3002,
+  },
+  {
+    "action": {
+      "requestHeaders": [
+        {
+          "header": "Cookie",
+          "operation": "set",
+          "value": "who=A",
+        },
+      ],
+      "responseHeaders": undefined,
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "domainType": "firstParty",
+      "excludedResourceTypes": [
+        "main_frame",
+        "sub_frame",
+      ],
+      "requestDomains": [
+        "localtest.me",
+      ],
+      "tabIds": [
+        7,
+      ],
+      "urlFilter": "|https:",
+    },
+    "id": 7,
+    "priority": 3002,
+  },
+]
+`;
+
+exports[`generateRules > host 作用域：全部正则，只有一个 target，Domain cookie 也只注给该主机 1`] = `
+[
+  {
+    "action": {
+      "requestHeaders": [
+        {
+          "header": "Cookie",
+          "operation": "remove",
+        },
+      ],
+      "responseHeaders": [
+        {
+          "header": "Set-Cookie",
+          "operation": "remove",
+        },
+        {
+          "header": "Clear-Site-Data",
+          "operation": "remove",
+        },
+      ],
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "regexFilter": "^https?://app\\.localtest\\.me(?::\\d+)?(?:/|$)",
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+        "stylesheet",
+        "script",
+        "image",
+        "font",
+        "object",
+        "xmlhttprequest",
+        "ping",
+        "csp_report",
+        "media",
+        "websocket",
+        "webtransport",
+        "webbundle",
+        "other",
+      ],
+      "tabIds": [
+        7,
+      ],
+    },
+    "id": 1,
+    "priority": 1000,
+  },
+  {
+    "action": {
+      "requestHeaders": [
+        {
+          "header": "Cache-Control",
+          "operation": "set",
+          "value": "no-cache",
+        },
+      ],
+      "responseHeaders": undefined,
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "regexFilter": "^https?://app\\.localtest\\.me(?::\\d+)?(?:/|$)",
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+        "xmlhttprequest",
+      ],
+      "tabIds": [
+        7,
+      ],
+    },
+    "id": 2,
+    "priority": 1000,
+  },
+  {
+    "action": {
+      "responseHeaders": [
+        {
+          "header": "Server-Timing",
+          "operation": "append",
+          "value": "<signal>",
+        },
+      ],
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "regexFilter": "^https?://app\\.localtest\\.me(?::\\d+)?(?:/|$)",
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+      ],
+      "tabIds": [
+        7,
+      ],
+    },
+    "id": 3,
+    "priority": 1000,
+  },
+  {
+    "action": {
+      "requestHeaders": [
+        {
+          "header": "Cookie",
+          "operation": "set",
+          "value": "who=v",
+        },
+      ],
+      "responseHeaders": [
+        {
+          "header": "Server-Timing",
+          "operation": "append",
+          "value": "<signal>",
+        },
+      ],
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "regexFilter": "^https://app\\.localtest\\.me(?::\\d+)?(?:/|$)",
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+      ],
+      "tabIds": [
+        7,
+      ],
+    },
+    "id": 4,
+    "priority": 3003,
+  },
+  {
+    "action": {
+      "requestHeaders": [
+        {
+          "header": "Cookie",
+          "operation": "set",
+          "value": "who=v",
+        },
+      ],
+      "responseHeaders": undefined,
+      "type": "modifyHeaders",
+    },
+    "condition": {
+      "domainType": "firstParty",
+      "excludedResourceTypes": [
+        "main_frame",
+        "sub_frame",
+      ],
+      "regexFilter": "^https://app\\.localtest\\.me(?::\\d+)?(?:/|$)",
+      "tabIds": [
+        7,
+      ],
+    },
+    "id": 5,
+    "priority": 3003,
+  },
+]
+`;

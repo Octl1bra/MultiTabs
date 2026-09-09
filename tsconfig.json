@@ -1,0 +1,14 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "target": "ES2022",
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "WebWorker"],
+    "jsx": "react-jsx",
+    "types": ["chrome", "vitest/globals", "node"]
+  },
+  "include": ["entrypoints", "src", "test/unit", "wxt.config.ts", "vitest.config.ts", ".wxt/wxt.d.ts"],
+  "exclude": ["node_modules", ".output", "test/e2e", "test/fixtures", "test/spikes"]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "multitabs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension: multiple isolated login sessions for the same site in one window",
+  "type": "module",
+  "packageManager": "pnpm@11.20.0",
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "postinstall": "wxt prepare",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "node --test --test-concurrency=1 --test-timeout=120000 --test-force-exit test/e2e/",
+    "site": "node test/fixtures/site/server.mjs"
+  },
+  "dependencies": {
+    "@heroui/react": "~3.2.4",
+    "@heroui/styles": "~3.2.4",
+    "react": "~19.2.8",
+    "react-dom": "~19.2.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "~10.0.1",
+    "@tailwindcss/vite": "~4.3.3",
+    "@types/chrome": "~0.2.9",
+    "@types/node": "~24.3.3",
+    "@types/react": "~19.2.18",
+    "@types/react-dom": "~19.2.7",
+    "@wxt-dev/module-react": "~1.2.2",
+    "eslint": "~10.0.0",
+    "prettier": "~3.9.6",
+    "puppeteer-core": "~25.10.0",
+    "tailwindcss": "~4.3.3",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "~8.70.0",
+    "vitest": "~5.0.0",
+    "wxt": "~0.21.4"
+  }
+}
